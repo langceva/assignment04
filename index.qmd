@@ -29,18 +29,42 @@ You can add options to executable code like this
 
 The `echo: false` option disables the printing of code (only output is displayed).
 
-## Visualization #1
+## Loading the data
+
+The analysis for this assignment was done utilizing data from the World Bank Enterprise Survey, found here \*\*INSERT LINK\*\*
 
 ```{r}
-#| warning: false
-#| message: false
-#| echo: false
+library(tidyverse)
+library(haven)
+data <- read_dta("New_Comprehensive_September_22_2025.dta")
 ```
 
-## Visualization #2
+## Visualization #1: Gender Distribution of Top Managers
 
 ```{r}
-#| warning: false
-#| message: false
-#| echo: false
+manager_data <- data |>
+  filter(!is.na(b7a)) |>
+  mutate(manager_gender = if_else(b7a == 1, "Female", "Male")) |>
+  count(manager_gender) |>
+  mutate(
+    percentage = n / sum(n) * 100,
+    label = paste0(round(percentage, 1), "%")
+  )
+
+ggplot(manager_data, aes(x = "", y = n, fill = manager_gender)) +
+  geom_col(width = 1) +
+  coord_polar(theta = "y") +
+  geom_text(aes(label = label), 
+            position = position_stack(vjust = 0.5),
+            size = 5, color = "white", fontface = "bold") +
+  labs(
+    title = "Gender Distribution of Top Managers",
+    subtitle = "Percentage of firms where the head is female vs. male",
+    caption = "Source: World Bank Enterprise Survey",
+    fill = "Manager Gender"
+  ) +
+  scale_fill_manual(values = c("Female" = "darkgreen", "Male" = "steelblue")) +
+  theme_void() 
 ```
+
+## Visualization 2: Access to Finance as a Business Obstacle
