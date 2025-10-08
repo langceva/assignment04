@@ -1,26 +1,133 @@
 ---
-title: "index.qmd"
+title: "World Bank Enterprise Survey Analysis"
+author: "Eva Langbehn and Gaby Cova"
 format: html
-editor: visual
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
 ```{r}
-1 + 1
+
+library(tidyverse)
+library(haven)  # This package reads Stata files
+
+# Load the data
+data <- read_dta("data/New_Comprehensive_September_22_2025.dta")
+
+# Look at the structure
+glimpse(data)
 ```
 
-You can add options to executable code like this
+## Introduction
+
+This analysis examines data from the World Bank Enterprise Survey.
+
+Data source: [World Bank Enterprise Surveys](https://www.enterprisesurveys.org)
+
+## Loading the Data
 
 ```{r}
-#| echo: false
-2 * 2
+
+library(tidyverse)
+library(haven)  # This package reads Stata files
+
+# Load the data
+data <- read_dta("data/New_Comprehensive_September_22_2025.dta")
+
+# Look at the structure
+glimpse(data)
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+## Exploring the Data
+
+```{r}
+# See the first few rows
+head(data)
+
+# See variable names
+names(data)
+```
+
+## Graph 2: Do Older Firms Have More Employees in Latin America?
+
+```{r}
+# Firm age vs. number of employees in Latin America
+data |>
+  filter(region == 2, b6 >= 0, b6 <= 100, l1 >= 5, l1 <= 500) |>
+  mutate(b6 = as.numeric(b6), l1 = as.numeric(l1)) |>  
+  ggplot(aes(x = b6, y = l1)) +  
+  geom_point(alpha = 0.4, color = "steelblue") +  
+  geom_smooth(method = "lm", color = "red") +
+  labs(
+    title = "Do Older Firms Have More Employees?",
+    subtitle = "Firm age vs firm size in Latin America",
+    caption = "Source: World Bank Enterprise Survey",
+    x = "Firm Age (years)",
+    y = "Number of Employees") +theme_minimal()
+
+#b6 = years the firm has been operating
+#l1 = total number of full-time employees
+#Each dot = one firm
+#Filtered -->  ages 0-100 years and employee 5-500.  
+#We mutate beacuse is original in stata format. 
+```
+
+This graph shows the relationship between firm age and number of employees in Latin America (ages between 0-100 years and employee counts from 5-500 workers). The upward red trend shows that as firms have more years, they tend to hire more workers. However, the trend is moderately weak. There is a clear concentration of firms that are new and have a small number of employees, suggesting the prevalence of small and medium enterprises in Latin America. To conclude, firm age is not the best predictor of number of employees. Additionally, something relevant to take into account is that Latin America is a region with diverse access to finance and macroeconomic conditions that could also add to the wide spread we are seeing.
+
+## Graph 3: Does corruption hurt sales in Latin America?
+
+```{r}
+
+# Does corruption hurt sales in Latin America?
+data |>
+  filter(region == 2, j30c >= 0, j30c <= 4, d2 > 0, d2 < 1e9) |>
+  ggplot(aes(x = factor(j30c), y = d2, fill = factor(j30c))) +
+  geom_boxplot() +
+  scale_y_log10(labels = scales::comma) +
+  labs(
+    title = "Does Corruption Hurt Sales in Latin America?",
+    subtitle = "Annual sales by severity of bribery problems faced by firms",
+    caption = "Source: World Bank Enterprise Survey",
+    x = "Bribery Problem (0=None, 4=Very Severe)",
+    y = "Annual Sales"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+# j30c = severity of bribery/corruption problems (0=None, 4=Very Severe)
+# d2 = total annual sales (in local currency)
+# Each boxplot = distribution of sales for firms at each corruption level
+# Filtered --> Only Latin America, valid corruption ratings (0-4), positive sales under 1 billion
+#we use fill = factor(j30c) to make 5 separate boxes. 
+# we scale it to a --> Logarithmic Scale (due to variation) and then add the commas to understand it better.
+```
+
+This graph shows if bribery problems affect annual sales. This graph only refers to Latin America, valid corruption ratings (0-4), and positive sales under 1 billion. The similarity of annual sales with bribery problems suggests that bribery doesn't directly affect sales. However, we  are comparing a lot of different firms that have different sizes and that a bribery problem might look different. Additionally, this is a self-reported variable that might have its own problems. Third, some firms may successfully navigate corrupt environments by paying bribes and that's why their sales might not get affected. 
+
+
+
+## Graph 4: Do Female-Owned Firms Face More Finance Problems?
+
+```{r}
+# Female ownership vs. access to finance in Latin America
+data |>
+  filter(region == 2, !is.na(b4), b4 %in% c(1, 2), k30 >= 0, k30 <= 4) |>
+  mutate(
+    female_owner = factor(b4, labels = c("Female Owner", "Male Owner"))
+  ) |>
+  ggplot(aes(x = factor(k30), fill = female_owner)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c("coral", "steelblue")) +
+  labs(
+    title = "Do Female-Owned Firms Face More Finance Problems?",
+    x = "Access to Finance Obstacle (0=None, 4=Very Severe)",
+    y = "Number of Firms",
+    fill = "Ownership"
+  ) +
+  theme_minimal()
+
+# b4 = gender of top owner (1=Female, 2=Male)
+# k30 = severity of access to finance problems (0=None, 4=Very Severe)
+# Each bar = count of firms at each finance obstacle level, separated by gender
+# Filtered --> Only Latin America, valid gender (1 or 2), valid finance ratings (0-4).
+```
+
+Write:
