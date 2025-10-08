@@ -1,50 +1,105 @@
 ---
-title: "World Bank Enterprise Survey Analysis"
-author: "Eva C. Langbehn and Gaby Cova"
+title: "Assignment 4"
+author: Gabriella Cova & Eva Langbehn
 format: html
+editor: visual
+execute: 
+  warning: false
+  message: false
 ---
 
 ```{r}
-
-library(tidyverse)
-library(haven)  # This package reads Stata files
-
-# Load the data
-data <- read_dta("data/New_Comprehensive_September_22_2025.dta")
-
-# Look at the structure
-glimpse(data)
+#| echo: false
+2 * 2
 ```
 
-## Introduction
+The `echo: false` option disables the printing of code (only output is displayed).
 
-This analysis examines data from the World Bank Enterprise Survey.
+## Loading the data
 
-Data source: [World Bank Enterprise Surveys](https://www.enterprisesurveys.org)
-
-## Loading the Data
+The analysis for this assignment was done utilizing data from the World Bank Enterprise Survey, found here \*\*INSERT LINK\*\*
 
 ```{r}
-
 library(tidyverse)
-library(haven)  # This package reads Stata files
-
-# Load the data
+library(haven)
 data <- read_dta("data/New_Comprehensive_September_22_2025.dta")
-
-# Look at the structure
-glimpse(data)
 ```
 
-## Exploring the Data
+## Visualization #1: Gender Distribution of Top Managers
+
+#### ADD DESCRIPTION
 
 ```{r}
-# See the first few rows
-head(data)
+manager_data <- data |>
+  filter(!is.na(b7a)) |>
+  mutate(manager_gender = if_else(b7a == 1, "Female", "Male")) |>
+  count(manager_gender) |>
+  mutate(
+    percentage = n / sum(n) * 100,
+    label = paste0(round(percentage, 1), "%")
+  )
 
-# See variable names
-names(data)
+ggplot(manager_data, aes(x = "", y = n, fill = manager_gender)) +
+  geom_col(width = 1) +
+  coord_polar(theta = "y") +
+  geom_text(aes(label = label), 
+            position = position_stack(vjust = 0.5),
+            size = 5, color = "white", fontface = "bold") +
+  labs(
+    title = "Gender Distribution of Top Managers",
+    subtitle = "Percentage of firms where the head is female vs. male",
+    caption = "Source: World Bank Enterprise Survey",
+    fill = "Manager Gender"
+  ) +
+  scale_fill_manual(values = c("Female" = "darkgreen", "Male" = "steelblue")) +
+  theme_void() 
 ```
+
+## Visualization #2: Access to Finance as a Business Obstacle
+
+#### ADD PARAGRAPH
+
+```{r}
+obstacle_data <- data |>
+  filter(!is.na(k30) & k30 >= 0) |>
+  mutate(
+    obstacle_level = case_when(
+      k30 == 0 ~ "No obstacle",
+      k30 == 1 ~ "Minor obstacle",
+      k30 == 2 ~ "Moderate obstacle",
+      k30 == 3 ~ "Major obstacle",
+      k30 == 4 ~ "Very severe obstacle"
+    ),
+    obstacle_level = factor(obstacle_level, 
+                           levels = c("No obstacle", "Minor obstacle", 
+                                     "Moderate obstacle", "Major obstacle", 
+                                     "Very severe obstacle"))
+  ) |>
+  filter(!is.na(obstacle_level)) |>
+  count(obstacle_level) |>
+  mutate(percentage = (n / sum(n)) * 100)
+
+# Bar chart
+ggplot(obstacle_data, aes(x = obstacle_level, y = percentage, fill = obstacle_level)) +
+  geom_col() +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            vjust = -0.5, size = 3.5) +
+  labs(
+    title = "Access to Finance as a Business Obstacle",
+    subtitle = "Distribution across all firms",
+    x = "Obstacle Level",
+    y = "Percentage of Firms (%)",
+    caption = "Source: World Bank Enterprise Survey"
+  ) +
+  theme_minimal() +
+  scale_y_continuous(limits = c(0, 45)) +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_brewer(palette = "Blues")
+
+```
+
+
 
 ## Graph: Do Older Firms Have More Employees in Latin America?
 
@@ -102,4 +157,7 @@ data |>
 
 ```
 
-This graph shows if bribery problems affect annual sales. This graph only refers to Latin America, valid corruption ratings (0-4), and positive sales under 1 billion. The similarity of annual sales with bribery problems suggests that bribery doesn't directly affect sales. However, we are comparing a lot of different firms that have different sizes and that a bribery problem might look different. Additionally, this is a self-reported variable that might have its own problems. Third, some firms may successfully navigate corrupt environments by paying bribes and that's why their sales might not get affected.
+This graph shows if bribery problems affect annual sales. This graph only refers to Latin America, valid corruption ratings (0-4), and positive sales under 1 billion. The similarity of annual sales with bribery problems suggests that bribery doesn't directly affect sales. However, we  are comparing a lot of different firms that have different sizes and that a bribery problem might look different. Additionally, this is a self-reported variable that might have its own problems. Third, some firms may successfully navigate corrupt environments by paying bribes and that's why their sales might not get affected. 
+
+
+
