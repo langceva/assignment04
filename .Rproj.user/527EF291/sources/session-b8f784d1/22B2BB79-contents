@@ -104,30 +104,3 @@ This graph shows if bribery problems affect annual sales. This graph only refers
 
 
 
-## Graph 4: Do Female-Owned Firms Face More Finance Problems?
-
-```{r}
-# Female ownership vs. access to finance in Latin America
-data |>
-  filter(region == 2, !is.na(b4), b4 %in% c(1, 2), k30 >= 0, k30 <= 4) |>
-  mutate(
-    female_owner = factor(b4, labels = c("Female Owner", "Male Owner"))
-  ) |>
-  ggplot(aes(x = factor(k30), fill = female_owner)) +
-  geom_bar(position = "dodge") +
-  scale_fill_manual(values = c("coral", "steelblue")) +
-  labs(
-    title = "Do Female-Owned Firms Face More Finance Problems?",
-    x = "Access to Finance Obstacle (0=None, 4=Very Severe)",
-    y = "Number of Firms",
-    fill = "Ownership"
-  ) +
-  theme_minimal()
-
-# b4 = gender of top owner (1=Female, 2=Male)
-# k30 = severity of access to finance problems (0=None, 4=Very Severe)
-# Each bar = count of firms at each finance obstacle level, separated by gender
-# Filtered --> Only Latin America, valid gender (1 or 2), valid finance ratings (0-4).
-```
-
-Write:
