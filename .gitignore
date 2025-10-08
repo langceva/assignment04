@@ -1,3 +1,5 @@
+*.csv
+data/
 *.dta
 .DS_Store
 .Rhistory
