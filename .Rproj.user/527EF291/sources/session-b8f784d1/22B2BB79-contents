@@ -46,7 +46,7 @@ head(data)
 names(data)
 ```
 
-## Graph 2: Do Older Firms Have More Employees in Latin America?
+## Graph: Do Older Firms Have More Employees in Latin America?
 
 ```{r}
 # Firm age vs. number of employees in Latin America
@@ -72,7 +72,7 @@ data |>
 
 This graph shows the relationship between firm age and number of employees in Latin America (ages between 0-100 years and employee counts from 5-500 workers). The upward red trend shows that as firms have more years, they tend to hire more workers. However, the trend is moderately weak. There is a clear concentration of firms that are new and have a small number of employees, suggesting the prevalence of small and medium enterprises in Latin America. To conclude, firm age is not the best predictor of number of employees. Additionally, something relevant to take into account is that Latin America is a region with diverse access to finance and macroeconomic conditions that could also add to the wide spread we are seeing.
 
-## Graph 3: Does corruption hurt sales in Latin America?
+## Graph : Does corruption hurt sales in Latin America?
 
 ```{r}
 
