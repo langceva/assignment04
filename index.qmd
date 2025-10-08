@@ -104,3 +104,116 @@ This graph shows if bribery problems affect annual sales. This graph only refers
 
 
 
+title: "Assignment 4"
+author: Gabriella Cova & Eva Langbehn
+format: html
+editor: visual
+execute: 
+  warning: false
+  message: false
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+## Loading the data
+
+The analysis for this assignment was done utilizing data from the World Bank Enterprise Survey, found here \*\*INSERT LINK\*\*
+
+```{r}
+library(tidyverse)
+library(haven)
+data <- read_dta("New_Comprehensive_September_22_2025.dta")
+```
+
+## Visualization #1: Gender Distribution of Top Managers
+
+#### The below visualizations show results from a survey of firms across the world, taken from the World Bank Enterprise. The policy relevance of the below is that
+
+#### The first visualization specifically disaggregates firm leadership by gender. As the pie chart shows, there is a significant disparity between female-led and male-led firms, with just 16% of firms being led by females vs. 84% being led by males.
+
+```{r}
+manager_data <- data |>
+  filter(!is.na(b7a)) |>
+  mutate(manager_gender = if_else(b7a == 1, "Female", "Male")) |>
+  count(manager_gender) |>
+  mutate(
+    percentage = n / sum(n) * 100,
+    label = paste0(round(percentage, 1), "%")
+  )
+
+ggplot(manager_data, aes(x = "", y = n, fill = manager_gender)) +
+  geom_col(width = 1) +
+  coord_polar(theta = "y") +
+  geom_text(aes(label = label), 
+            position = position_stack(vjust = 0.5),
+            size = 5, color = "white", fontface = "bold") +
+  labs(
+    title = "Gender Distribution of Top Managers",
+    subtitle = "Percentage of firms where the head is female vs. male",
+    caption = "Source: World Bank Enterprise Survey",
+    fill = "Manager Gender"
+  ) +
+  scale_fill_manual(values = c("Female" = "darkgreen", "Male" = "steelblue")) +
+  theme_void() 
+```
+
+## Visualization 2: Access to Finance as a Business Obstacle
+
+```{r}
+obstacle_data <- data |>
+  filter(!is.na(k30) & k30 >= 0) |>
+  mutate(
+    obstacle_level = case_when(
+      k30 == 0 ~ "No obstacle",
+      k30 == 1 ~ "Minor obstacle",
+      k30 == 2 ~ "Moderate obstacle",
+      k30 == 3 ~ "Major obstacle",
+      k30 == 4 ~ "Very severe obstacle"
+    ),
+    obstacle_level = factor(obstacle_level, 
+                           levels = c("No obstacle", "Minor obstacle", 
+                                     "Moderate obstacle", "Major obstacle", 
+                                     "Very severe obstacle"))
+  ) |>
+  filter(!is.na(obstacle_level)) |>
+  count(obstacle_level) |>
+  mutate(percentage = (n / sum(n)) * 100)
+
+# Bar chart
+ggplot(obstacle_data, aes(x = obstacle_level, y = percentage, fill = obstacle_level)) +
+  geom_col() +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            vjust = -0.5, size = 3.5) +
+  labs(
+    title = "Access to Finance as a Business Obstacle",
+    subtitle = "Distribution across all firms",
+    x = "Obstacle Level",
+    y = "Percentage of Firms (%)",
+    caption = "Source: World Bank Enterprise Survey"
+  ) +
+  theme_minimal() +
+  scale_y_continuous(limits = c(0, 45)) +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_brewer(palette = "Blues")
+
+```
