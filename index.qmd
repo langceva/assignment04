@@ -104,12 +104,17 @@ data |>
   ggplot(aes(x = b6, y = l1)) +  
   geom_point(alpha = 0.4, color = "steelblue") +  
   geom_smooth(method = "lm", color = "red") +
+  annotate("text", x = 75, y = 450, 
+           label = "Weak positive correlation", 
+           color = "red", size = 4, fontface = "bold") +  # We added this line (for the Part 4: GitHub pages and plot annotation)
   labs(
     title = "Do Older Firms Have More Employees?",
     subtitle = "Firm age vs firm size in Latin America",
     caption = "Source: World Bank Enterprise Survey",
     x = "Firm Age (years)",
-    y = "Number of Employees") +theme_minimal()
+    y = "Number of Employees") +
+  theme_minimal()
+
 #Comments: 
 #b6 = years the firm has been operating
 #l1 = total number of full-time employees
