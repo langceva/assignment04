@@ -1,6 +1,6 @@
 ---
 title: "World Bank Enterprise Survey Analysis"
-author: "Eva Langbehn and Gaby Cova"
+author: "Eva C. Langbehn and Gaby Cova"
 format: html
 ---
 
@@ -62,7 +62,7 @@ data |>
     caption = "Source: World Bank Enterprise Survey",
     x = "Firm Age (years)",
     y = "Number of Employees") +theme_minimal()
-
+#Comments: 
 #b6 = years the firm has been operating
 #l1 = total number of full-time employees
 #Each dot = one firm
@@ -92,15 +92,14 @@ data |>
   theme_minimal() +
   theme(legend.position = "none")
 
-# j30c = severity of bribery/corruption problems (0=None, 4=Very Severe)
+#Comments: 
+#j30c = severity of bribery/corruption problems (0=None, 4=Very Severe)
 # d2 = total annual sales (in local currency)
 # Each boxplot = distribution of sales for firms at each corruption level
 # Filtered --> Only Latin America, valid corruption ratings (0-4), positive sales under 1 billion
 #we use fill = factor(j30c) to make 5 separate boxes. 
 # we scale it to a --> Logarithmic Scale (due to variation) and then add the commas to understand it better.
+
 ```
 
-This graph shows if bribery problems affect annual sales. This graph only refers to Latin America, valid corruption ratings (0-4), and positive sales under 1 billion. The similarity of annual sales with bribery problems suggests that bribery doesn't directly affect sales. However, we  are comparing a lot of different firms that have different sizes and that a bribery problem might look different. Additionally, this is a self-reported variable that might have its own problems. Third, some firms may successfully navigate corrupt environments by paying bribes and that's why their sales might not get affected. 
-
-
-
+This graph shows if bribery problems affect annual sales. This graph only refers to Latin America, valid corruption ratings (0-4), and positive sales under 1 billion. The similarity of annual sales with bribery problems suggests that bribery doesn't directly affect sales. However, we are comparing a lot of different firms that have different sizes and that a bribery problem might look different. Additionally, this is a self-reported variable that might have its own problems. Third, some firms may successfully navigate corrupt environments by paying bribes and that's why their sales might not get affected.

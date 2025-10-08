@@ -3,9 +3,9 @@
     "path": "~/Desktop/MIDP /3rd Semester (25)/Data Science/Assignment 04/assignment04/index.qmd",
     "project_path": "index.qmd",
     "type": "quarto_markdown",
-    "hash": "0",
+    "hash": "2468721484",
     "contents": "",
-    "dirty": true,
+    "dirty": false,
     "created": 1759861198441.0,
     "source_on_save": false,
     "relative_order": 3,
@@ -17,16 +17,16 @@
         "Source": "Source",
         "docOutlineVisible": "1",
         "rmdVisualCollapsedChunks": "",
-        "cursorPosition": "69,32",
-        "scrollLine": "59",
-        "rmdVisualModeLocation": "407:2046.1112060546875"
+        "cursorPosition": "2,16",
+        "scrollLine": "0",
+        "rmdVisualModeLocation": "802:1923.888916015625"
     },
     "folds": "",
-    "lastKnownWriteTime": 1759936941,
+    "lastKnownWriteTime": 1759937986,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1759937351146,
+    "last_content_update": 1759937986285,
     "read_only": false,
     "read_only_alternatives": []
 }
