@@ -11,7 +11,7 @@ execute:
 
 ## Loading the data
 
-The analysis for this assignment was done utilizing data from the World Bank Enterprise Survey, found here \*\*INSERT LINK\*\*
+The analysis for this assignment was done utilizing data from the World Bank Enterprise Survey, found [here](https://www.enterprisesurveys.org/en/data).
 
 ```{r}
 library(tidyverse)
@@ -51,7 +51,6 @@ The below graphs are created utilizing the World Bank Enterprise Survey. We were
 
 ## Visualization #2: Access to Finance as a Business Obstacle
 
-#### ADD PARAGRAPH
 
 ```{r}
 obstacle_data <- data |>
@@ -95,7 +94,7 @@ ggplot(obstacle_data, aes(x = obstacle_level, y = percentage, fill = obstacle_le
 
 This second visualization displays how firms across the survey rate access to finance as an obstacle to their operations, with responses distributed across 5 categories. The data shows that over 40% of firms report facing moderate to very severe obstacles, highlighting that access to finance remains a significant constraint for a substantial portion of businesses. This has policy implications in terms of expanding credit availability and exploring alternative lending mechanisms to foster firm growth and economic development.
 
-## Visualization #3: Do Older Firms Have More Employees in Latin America?
+## Visualization  #3: Do Older Firms Have More Employees in Latin America?
 
 ```{r}
 # Firm age vs. number of employees in Latin America
